@@ -13,3 +13,17 @@ export async function getAllTicketsTypes(req: AuthenticatedRequest, res: Respons
     }
 }
 
+export async function getUserTickets(req: AuthenticatedRequest, res: Response){
+
+    const userId = parseInt(req.params.id)
+
+    try{
+
+        const ticket = await ticketService.userTicket(userId)
+
+        return res.status(httpStatus.OK).send(ticket)
+
+    } catch(e){
+        return res.sendStatus(httpStatus.NOT_FOUND)
+    }
+}
