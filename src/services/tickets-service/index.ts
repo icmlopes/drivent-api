@@ -1,4 +1,4 @@
-import { conflictError, notFoundError, requestError } from "@/errors";
+import { conflictError, notFoundError } from "@/errors";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketRepository from "@/repositories/tickets-repository";
 
@@ -9,8 +9,6 @@ async function getAllTickets(){
 
 async function userTicket(userId:number){
 
-    console.log("tenho o userId aqui:", userId)
-
     const findEnrollmentUserId = await enrollmentRepository.findWithAddressByUserId(userId)
     if (!findEnrollmentUserId){
         throw notFoundError()
@@ -19,7 +17,6 @@ async function userTicket(userId:number){
     const ticket = await ticketRepository.findUserTicket(findEnrollmentUserId.id)
 
     if (!ticket){
-        console.log("Aqui no ticket repository  ")
         throw notFoundError()
     }
     return ticket
@@ -33,9 +30,14 @@ async function postUserTicket(userId: number, ticketTypeId: number){
         throw notFoundError()
     }
 
-    await ticketRepository.createTicket(findEnrollmentByUserId.id, ticketTypeId)
+    const isThereTicket = await ticketRepository.findUserTicket(findEnrollmentByUserId.id)
 
-    const data = await ticketRepository.findUserTicket(findEnrollmentByUserId.id)
+    if (isThereTicket !== null){
+
+        throw conflictError("Ticket já existente!")
+    }
+     
+    const data = await ticketRepository.createTicket(ticketTypeId, findEnrollmentByUserId.id)
 
     return data;
 

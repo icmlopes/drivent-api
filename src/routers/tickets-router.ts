@@ -7,9 +7,9 @@ const ticketsRouter = Router();
 
 
 ticketsRouter.all('/*', authenticateToken);
-ticketsRouter.get('/tickets', getUserTickets);
+ticketsRouter.get('/', getUserTickets);
 ticketsRouter.get('/types', getAllTicketsTypes);
-ticketsRouter.post('/tickets', validateBody(createTicketSchema), createTicket)
+ticketsRouter.post('/', validateBody(createTicketSchema), createTicket)
 
 export { ticketsRouter };
 

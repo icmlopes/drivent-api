@@ -46,6 +46,10 @@ export async function createTicket(req: AuthenticatedRequest, res: Response){
         return res.status(httpStatus.CREATED).send(postTicket)
 
     } catch(e){
+
+        if( e.name === 'ConflictError'){
+            return res.status(httpStatus.CONFLICT).send(e.message)
+        }
         return res.sendStatus(httpStatus.NOT_FOUND)
     }
 

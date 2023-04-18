@@ -6,4 +6,4 @@ const paymentsRouter = Router();
 paymentsRouter.all('/*', authenticateToken);
 paymentsRouter.post('')
 
-export  {paymentsRouter}
+export {paymentsRouter}
