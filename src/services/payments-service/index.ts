@@ -7,7 +7,6 @@ async function checkPaymentParams(ticketId: number, userId: number){
 
     const ticket = await ticketRepository.getTicketByTicketId(ticketId)
 
-    console.log(ticket)
     if(!ticket){
         throw notFoundError()
     }
