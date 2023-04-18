@@ -6,6 +6,28 @@ import httpStatus from "http-status";
 
 export async function createPayment(req: AuthenticatedRequest, res: Response){
 
+    const { userId } = req
+
+    const { ticketId, cardData } = req.body
+
+    if(!ticketId || !cardData){
+        return res.sendStatus(httpStatus.BAD_REQUEST)
+    }
+
+    try{
+
+        const payment = await PaymentService.postPayment(userId, ticketId, cardData)
+
+        return res.status(httpStatus.OK).send(payment)
+
+    } catch(e){
+        
+        if(e.name === "UnauthorizedError"){
+            return res.sendStatus(httpStatus.UNAUTHORIZED)
+        }
+
+        return res.sendStatus(httpStatus.NOT_FOUND)
+    }
 
 }
 
