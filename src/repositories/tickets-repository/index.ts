@@ -8,7 +8,10 @@ async function findAllTicketsTypes() {
 
 async function findUserTicket(enrollmentId: number) {
     const data = await prisma.ticket.findFirst({
-        where: {enrollmentId}
+        where: {enrollmentId},
+        include: {
+            TicketType: true,
+        }
     })
     return data
 }
