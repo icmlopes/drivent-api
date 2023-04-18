@@ -1,40 +1,40 @@
 import { prisma } from "@/config"
+import { TicketStatus } from "@prisma/client"
 
 
 async function findAllTicketsTypes() {
     return await prisma.ticketType.findMany()
 }
 
-async function findUserTicket(id: number) {
+async function findUserTicket(enrollmentId: number) {
     const data = await prisma.ticket.findFirst({
-        where: { id },
-        select: {
-            id: true,
-            status: true,
-            ticketTypeId: true,
-            enrollmentId: true,
-            TicketType: {
-                select:{
-                    id: true,
-                    name: true,
-                    price: true,
-                    isRemote: true,
-                    includesHotel: true,
-                    createdAt: true,
-                    updatedAt: true,
-                }
-            },
-            createdAt: true,
-            updatedAt: true,
+        where: {enrollmentId}
+    })
+    console.log("Tô aqui no repositorio", enrollmentId)
+    return data
+}
+
+async function createTicket(ticketTypeId: number, enrollmentId: number){
+    
+    const data = await prisma.ticket.create({
+        data:{
+            ticketTypeId,
+            enrollmentId,
+            status: TicketStatus.RESERVED
+        },
+        include:{
+            TicketType: true,
         }
     })
+    console.log("Isso aqui ta no repositorio, verificando os dados", data)
     return data
 }
 
 
 const ticketRepository = {
     findAllTicketsTypes,
-    findUserTicket
+    findUserTicket,
+    createTicket,
 }
 
 
